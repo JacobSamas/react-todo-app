@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { deleteTask, editTask, toggleComplete } from '../redux/tasksSlice';
+import { FiEdit, FiCheck, FiTrash2, FiX } from 'react-icons/fi';
+import { Modal, Button } from 'react-bootstrap';
 
 const TaskItem = ({ task }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(task.text);
+  const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
   const handleDelete = () => {
     dispatch(deleteTask(task.id));
+    setShowModal(false);
   };
 
   const handleEdit = () => {
@@ -21,35 +25,55 @@ const TaskItem = ({ task }) => {
   };
 
   return (
-    <div className={`flex items-center justify-between p-2 mb-2 border rounded ${task.completed ? 'bg-green-100' : ''}`}>
-      {isEditing ? (
-        <>
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleEdit()}
-            className="p-2 border rounded mr-2 flex-grow"
-          />
-          <button onClick={handleEdit} className="px-4 py-2 bg-blue-500 text-white rounded">
-            Save
-          </button>
-        </>
-      ) : (
-        <>
-          <span className={`flex-grow ${task.completed ? 'line-through' : ''}`}>{task.text}</span>
-          <button onClick={() => setIsEditing(true)} className="px-2 py-1 bg-yellow-500 text-white rounded mr-2">
-            Edit
-          </button>
-          <button onClick={handleToggleComplete} className="px-2 py-1 bg-green-500 text-white rounded mr-2">
-            {task.completed ? 'Unmark' : 'Complete'}
-          </button>
-          <button onClick={handleDelete} className="px-2 py-1 bg-red-500 text-white rounded">
+    <>
+      <div className={`d-flex align-items-center justify-content-between p-3 mb-2 bg-white border rounded ${task.completed ? 'bg-success bg-opacity-10' : ''}`}>
+        {isEditing ? (
+          <>
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleEdit()}
+              className="form-control me-2"
+            />
+            <button onClick={handleEdit} className="btn btn-success me-2">
+              <FiCheck />
+            </button>
+            <button onClick={() => setIsEditing(false)} className="btn btn-secondary">
+              <FiX />
+            </button>
+          </>
+        ) : (
+          <>
+            <span className={`flex-grow ${task.completed ? 'text-decoration-line-through' : ''}`}>{task.text}</span>
+            <button onClick={() => setIsEditing(true)} className="btn btn-warning me-2">
+              <FiEdit />
+            </button>
+            <button onClick={handleToggleComplete} className="btn btn-success me-2">
+              {task.completed ? <FiX /> : <FiCheck />}
+            </button>
+            <button onClick={() => setShowModal(true)} className="btn btn-danger">
+              <FiTrash2 />
+            </button>
+          </>
+        )}
+      </div>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this task?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDelete}>
             Delete
-          </button>
-        </>
-      )}
-    </div>
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 
