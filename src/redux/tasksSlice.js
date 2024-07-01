@@ -4,6 +4,7 @@ export const tasksSlice = createSlice({
   name: 'tasks',
   initialState: {
     tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+    lists: ['Personal', 'Work']
   },
   reducers: {
     addTask: (state, action) => {
@@ -28,8 +29,13 @@ export const tasksSlice = createSlice({
         localStorage.setItem('tasks', JSON.stringify(state.tasks));
       }
     },
+    addList: (state, action) => {
+      if (!state.lists.includes(action.payload)) {
+        state.lists.push(action.payload);
+      }
+    }
   },
 });
 
-export const { addTask, deleteTask, editTask, toggleComplete } = tasksSlice.actions;
+export const { addTask, deleteTask, editTask, toggleComplete, addList } = tasksSlice.actions;
 export default tasksSlice.reducer;

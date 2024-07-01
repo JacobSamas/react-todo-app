@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { deleteTask, editTask, toggleComplete } from '../redux/tasksSlice';
 import { FiEdit, FiCheck, FiTrash2, FiX } from 'react-icons/fi';
 import { Modal, Button } from 'react-bootstrap';
+import moment from 'moment';
 
 const TaskItem = ({ task }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -24,9 +25,11 @@ const TaskItem = ({ task }) => {
     dispatch(toggleComplete(task.id));
   };
 
+  const isDueSoon = moment(task.dueDate).diff(moment(), 'days') <= 2 && !task.completed;
+
   return (
     <>
-      <div className={`d-flex align-items-center justify-content-between p-3 mb-2 bg-white border rounded ${task.completed ? 'bg-success bg-opacity-10' : ''}`}>
+      <div className={`d-flex align-items-center justify-content-between p-3 mb-2 bg-white border rounded ${task.completed ? 'bg-success bg-opacity-10' : ''} ${isDueSoon ? 'bg-warning bg-opacity-25' : ''}`}>
         {isEditing ? (
           <>
             <input
@@ -46,6 +49,8 @@ const TaskItem = ({ task }) => {
         ) : (
           <>
             <span className={`flex-grow ${task.completed ? 'text-decoration-line-through' : ''}`}>{task.text}</span>
+            <span className="badge bg-info me-2">{task.priority}</span>
+            <span className="badge bg-secondary me-2">{task.dueDate}</span>
             <button onClick={() => setIsEditing(true)} className="btn btn-warning me-2">
               <FiEdit />
             </button>

@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FiHome, FiCalendar, FiSettings, FiLogOut, FiList, FiPlus } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
+import { addList } from '../redux/tasksSlice';
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const [newList, setNewList] = useState('');
+  const lists = useSelector(state => state.tasks.lists);
+
+  const handleAddList = () => {
+    if (newList.trim() !== '') {
+      dispatch(addList(newList));
+      setNewList('');
+    }
+  };
+
   return (
     <div className="d-flex flex-column bg-light border-right vh-100 p-3">
       <div className="mb-4">
@@ -16,12 +30,22 @@ const Sidebar = () => {
         <h2 className="h6">Tasks</h2>
         <ul className="list-unstyled">
           <li className="mb-3">
-            <FiHome className="me-2" />
-            Upcoming
+            <Link to="/upcoming" className="text-decoration-none text-dark">
+              <FiCalendar className="me-2" />
+              Upcoming
+            </Link>
           </li>
           <li className="mb-3">
-            <FiCalendar className="me-2" />
-            Today
+            <Link to="/today" className="text-decoration-none text-dark">
+              <FiCalendar className="me-2" />
+              Today
+            </Link>
+          </li>
+          <li className="mb-3">
+            <Link to="/all" className="text-decoration-none text-dark">
+              <FiHome className="me-2" />
+              View All Tasks
+            </Link>
           </li>
         </ul>
       </nav>
@@ -29,21 +53,42 @@ const Sidebar = () => {
         <h2 className="h6">Lists</h2>
         <ul className="list-unstyled">
           <li className="mb-3">
-            <FiList className="me-2" />
-            Personal
+            <Link to="/personal" className="text-decoration-none text-dark">
+              <FiList className="me-2" />
+              Personal
+            </Link>
           </li>
           <li className="mb-3">
-            <FiList className="me-2" />
-            Work
+            <Link to="/work" className="text-decoration-none text-dark">
+              <FiList className="me-2" />
+              Work
+            </Link>
           </li>
-          <li className="mb-3">
-            <FiList className="me-2" />
-            List 1
-          </li>
-          <li className="mb-3">
-            <FiPlus className="me-2" />
-            Add New List
-          </li>
+        </ul>
+      </div>
+      <div className="mt-4">
+        <h2 className="h6">Add New List</h2>
+        <div className="mb-3 d-flex">
+          <input
+            type="text"
+            value={newList}
+            onChange={(e) => setNewList(e.target.value)}
+            className="form-control me-2"
+            placeholder="New List"
+          />
+          <button className="btn btn-primary" onClick={handleAddList}>
+            <FiPlus />
+          </button>
+        </div>
+        <ul className="list-unstyled">
+          {lists.map((list, index) => (
+            <li className="mb-3" key={index}>
+              <Link to={`/${list.toLowerCase()}`} className="text-decoration-none text-dark">
+                <FiList className="me-2" />
+                {list}
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
       <div className="mt-4">
