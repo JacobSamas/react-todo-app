@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { deleteTask, editTask } from '../redux/actions';
+import './TaskItem.css';
 
 const TaskItem = ({ task }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,7 +18,7 @@ const TaskItem = ({ task }) => {
   };
 
   return (
-    <div>
+    <div className="task-item">
       {isEditing ? (
         <>
           <input
