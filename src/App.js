@@ -5,8 +5,8 @@ import './App.css';
 
 const App = () => {
   return (
-    <div className="app">
-      <h1>React To-Do Application</h1>
+    <div className="app bg-white text-black min-h-screen flex flex-col items-center justify-center p-4">
+      <h1 className="text-4xl mb-4">React To-Do Application</h1>
       <TaskInput />
       <TaskList />
     </div>

@@ -1,10 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import TaskItem from './TaskItem';
-import './TaskList.css';
 
 const TaskList = () => {
-  const tasks = useSelector((state) => state.tasks);
+  const tasks = useSelector((state) => state.tasks.tasks);
 
   return (
     <div className="task-list">
